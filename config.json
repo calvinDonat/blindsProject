@@ -1,0 +1,17 @@
+{
+    "sceduledEvents": [
+        {
+            "special": "",
+            "time": "* 26 06 * * *",
+            "action": "UP",
+            "target": "blinds"
+        },
+        {
+            "special": "",
+            "time": "* 16 07 * * *",
+            "action": "UP",
+            "target": "blinds" 
+        }
+    ]
+}   
+
