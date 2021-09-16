@@ -1,8 +1,8 @@
 {
-    "sceduledEvents": [
+    "scheduledEvents": [
         {
             "special": "",
-            "time": "* 26 06 * * *",
+            "time": "* 35 17 * * *",
             "action": "UP",
             "target": "blinds"
         },
