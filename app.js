@@ -10,7 +10,6 @@ setInterval(() => {
   console.log(`\n \n \nRight now it is ${date.getHours()}:${date.getMinutes()}`)
 
   for (let event of scheduledEvents) { 
-  
     if (event.special) {
       function getSunriseAndSunset(latitude = 41.059858, longitude = -73.574960, day = 'today') {
         const axios = require('axios');
