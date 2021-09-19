@@ -1,13 +1,14 @@
 "use strict"
 
-console.log("working...")
-
 async function setup() {
 
 }
 
 async function run() {
-
+  console.info("Starting Setup...");
+  await setup();
+  console.info("Setup Completed.");
+  console.info("Running...")
 }
 
 setInterval(() => {
@@ -51,3 +52,5 @@ setInterval(() => {
     }
 }
 }, 60000);
+
+run();
