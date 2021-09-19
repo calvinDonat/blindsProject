@@ -2,6 +2,14 @@
 
 console.log("working...")
 
+async function setup() {
+
+}
+
+async function run() {
+
+}
+
 setInterval(() => {
   const config = require('./config.json');
   var scheduledEvents = config['scheduledEvents'];
