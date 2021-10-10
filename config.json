@@ -1,15 +1,13 @@
 {
     "scheduledEvents": [
         {
-            "special": "",
-            "time": "* 35 17 * * *",
+            "time": "${SUNRISE}",
             "action": "UP",
             "target": "blinds"
         },
         {
-            "special": "",
-            "time": "* 16 07 * * *",
-            "action": "UP",
+            "time": "${SUNSET}",
+            "action": "DOWN",
             "target": "blinds" 
         }
     ]
