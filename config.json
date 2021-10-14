@@ -3,12 +3,12 @@
         {
             "time": "${SUNRISE}",
             "action": "UP",
-            "target": "blinds"
+            "target": "BLINDS"
         },
         {
             "time": "${SUNSET}",
             "action": "DOWN",
-            "target": "blinds" 
+            "target": "BLINDS" 
         }
     ]
 }   
