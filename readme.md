@@ -1,6 +1,27 @@
 # Introduction
-This is an *introduction*...
+The goal of this project is to create fully automatic blinds that move up and down, and can be synced to sunrise and sunset as well as set to certain times of the day.
 
+# Configuration file
+A file with all of the info needed to move the blinds at the correct times an in the correct directions.
+```
+{
+    "timezone": "America/New_York",
+    "scheduledEvents": [
+        {
+            "time": "${SUNRISE}",
+            "action": "UP",
+            "target": "BLINDS"
+        },
+        {
+            "time": "${SUNSET}",
+            "action": "DOWN",
+            "target": "BLINDS" 
+        }
+    ]
+}   
+```
+### Timezone
+### Scheduled Events
 # Functions
 ## start();
 ### Description

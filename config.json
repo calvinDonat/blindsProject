@@ -1,4 +1,5 @@
 {
+    "location": "Greeich",
     "scheduledEvents": [
         {
             "time": "${SUNRISE}",
