@@ -3,27 +3,17 @@
 async function start() {
   try { 
     let location = await getLocation();
-    console.log(`location is: ${location}`);
+    console.log(`\nlocation is: ${location}`);
     let cities = await getCities();
-    let locationDetails;
-    getLocationDetails(cities, location).then((cityDetails) => {
-      locationDetails = cityDetails
-    }).catch((err) => {
-      console.log(err);
-      locationDetails = {
-        timezone: "America/New_York",
-        lat: "40.6943",
-        lng: "-73.9249"
-      }
-    });
+    let locationDetails = await getLocationDetails(cities, location);
     console.log(locationDetails);
-    let sunriseAndSunset = await getSunriseAndSunset(details.timezone, details.lat, details.lng);
+    let sunriseAndSunset = await getSunriseAndSunset(locationDetails.timezone, locationDetails.lat, locationDetails.lng);
     console.log(sunriseAndSunset);
     let scheduledEvents = await getScheduledEvents(sunriseAndSunset);
     console.log(scheduledEvents);;
     run(scheduledEvents);
   } catch(err) {
-    console.log("catching the error", err);
+    console.log("\nCatching the error:", err);
   }
 }
 
@@ -32,11 +22,7 @@ async function getLocation() {
     const fs = require("fs");
     let data = fs.readFileSync('./config.json', "utf8");
     resolve(JSON.parse(data).location);
-  }).catch((err) => {
-    console.log(err);
-    console.log(456);
-    return "INVALID CITY";
-  }) 
+  })
 }
 
 async function getCities() {
@@ -50,32 +36,51 @@ async function getCities() {
       relax_column_count: true
     });
     resolve(cities);
-  }).catch((err) => {
-    console.log(err);
-    console.log(123);
-  })
+  });
 }
 
-async function getLocationDetails(cities, location) {
+async function getCityDetails(cities, location) {
   return new Promise((resolve, reject) => {
-      let details = null;
+      let cityDetails = null;
       for (let city of cities) {
         if (city.city_ascii.toLowerCase() == location.toLowerCase()) {
-          console.log(city);
-          details = {
-            timezone: city.timezone,
+          let timezone;
+          if (city.timezone == undefined) {
+            timezone = city.id;
+          } else {
+            timezone = city.timezone;
+          }
+          cityDetails = {
+            timezone: timezone,
             lat: city.lat,
             lng: city.lng
           }
           break;
         }
       }
-      if (details == null) {
+      if (cityDetails == null) {
         reject(`Could not find location: ${location}; Valid locations must be cities with populations over 100,000.`);
       }
-      resolve(details);
+      resolve(cityDetails);
   });
 };
+
+async function getLocationDetails(cities, location) {
+  return new Promise(async (resolve, reject) => {
+    await getCityDetails(cities, location).then((cityDetails) => {
+      resolve(cityDetails)
+    }).catch((err) => {
+      console.log(err);
+      let locationDetails = {
+        timezone: "America/New_York",
+        lat: "40.6943",
+        lng: "-73.9249"
+      }
+      resolve(locationDetails);
+      
+    });
+  })
+}
 
 async function getSunriseAndSunset(timezone, latitude = 41.059858, longitude = -73.574960, day = 'today') {
   return new Promise(async (resolve, reject) => {
@@ -93,23 +98,22 @@ async function getSunriseAndSunset(timezone, latitude = 41.059858, longitude = -
     } catch(err) {
       console.log(err);
     }  
-  }).catch((err) => { 
-    console.log(err);
-  })
+  });
 };
 
 async function getScheduledEvents(sunriseAndSunset) {
   return new Promise((resolve, reject) => {
-    const config = require('./config.json');
-    var scheduledEvents = config['scheduledEvents'];
-    for (let event of scheduledEvents) {
+    const fs = require("fs");
+    let data = fs.readFileSync("./config.json", "utf8");
+    data = JSON.parse(data);
+    for (let event of data.scheduledEvents) {
       if (event.time == "${SUNRISE}") {
         event.time = sunriseAndSunset.sunrise;
       } else if (event.time == "${SUNSET}") {
         event.time = sunriseAndSunset.sunset;
       }
     }
-    resolve(scheduledEvents);
+    resolve(data.scheduledEvents);
   });
 }
 
@@ -119,7 +123,7 @@ function currTime(time, timezone) {
     return moment_timezone().format("HH:mm:ss");
   } else {
     const moment_timezone = require('moment-timezone');
-    let returnValue = moment_timezone.utc(time, "HH:mm:ss a").tz("America/New_York").format("HH:mm:ss");
+    let returnValue = moment_timezone.utc(time, "HH:mm:ss a").tz(timezone).format("HH:mm:ss");
     return returnValue;
   }
 }
